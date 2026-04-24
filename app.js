@@ -1,7 +1,7 @@
 async function fetchPlans() {
     const container = document.getElementById('pricing-container');
     try {
-        const response = await fetch('https://dash.detriot.cloud/api/plans');
+        const response = await fetch('/api/plans');
         const data = await response.json();
 
         if (data.success && data.plans) {

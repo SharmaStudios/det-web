@@ -26,7 +26,7 @@ export default function Pricing() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://dash.detriot.cloud/api/plans")
+    fetch("/api/plans")
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setPlans(data.plans);
