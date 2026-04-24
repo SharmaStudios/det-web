@@ -6,7 +6,7 @@ export async function GET() {
       headers: {
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 3600 } // Cache for 1 hour
+      next: { revalidate: 0 } // Disable cache to reflect real-time stock status
     });
 
     if (!response.ok) {
