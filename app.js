@@ -19,6 +19,14 @@ function renderPlans(plans) {
     const container = document.getElementById('pricing-container');
     container.innerHTML = '';
 
+    let selectedCurrency = "USD";
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz.includes("Kolkata") || tz.includes("Delhi") || tz.includes("Asia/Calcutta")) {
+        selectedCurrency = "INR";
+    } else if (tz.includes("Europe")) {
+        selectedCurrency = "EUR";
+    }
+
     plans.forEach((plan, index) => {
         const card = document.createElement('div');
         card.className = `pricing-card ${index === 1 ? 'popular' : ''} ${plan.is_out_of_stock ? 'out-of-stock' : ''}`;
@@ -28,6 +36,8 @@ function renderPlans(plans) {
         const disk = plan.specs.disk_gb >= 1 ? `${plan.specs.disk_gb} GB` : `${plan.specs.disk_mb} MB`;
         const cpu = plan.specs.cpu_cores ? `${plan.specs.cpu_cores} Cores` : `${plan.specs.cpu_percent}% CPU`;
 
+        const priceObj = plan.prices?.find(p => p.code === selectedCurrency) || { symbol: "$", amount: plan.price };
+
         const buttonHtml = plan.is_out_of_stock 
             ? `<div class="btn" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); cursor: not-allowed; border: 1px solid rgba(255,255,255,0.05);">Sold Out</div>`
             : `<a href="https://dash.detriot.cloud/dashboard/checkout/${plan.id}" class="btn ${index === 1 ? 'btn-primary' : 'btn-secondary'}">Order Now</a>`;
@@ -36,7 +46,7 @@ function renderPlans(plans) {
             ${index === 1 && !plan.is_out_of_stock ? '<div class="popular-tag" style="background: var(--secondary); font-size: 0.7rem; padding: 2px 10px; border-radius: 4px; display: inline-block; margin-bottom: 10px;">MOST POPULAR</div>' : ''}
             ${plan.is_out_of_stock ? '<div class="out-of-stock-tag" style="background: #dc2626; font-size: 0.7rem; padding: 2px 10px; border-radius: 4px; display: inline-block; margin-bottom: 10px; box-shadow: 0 0 15px rgba(220,38,38,0.4);">OUT OF STOCK</div>' : ''}
             <h3>${plan.name}</h3>
-            <div class="price">$${plan.price.toFixed(2)}<span>/${plan.billing_period}</span></div>
+            <div class="price">${priceObj.symbol}${priceObj.amount.toFixed(2)}<span>/${plan.billing_period}</span></div>
             <ul class="specs-list">
                 <li><i data-lucide="cpu" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${cpu}</strong> Power</li>
                 <li><i data-lucide="database" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${ram}</strong> RAM</li>

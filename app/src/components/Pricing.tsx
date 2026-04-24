@@ -7,6 +7,7 @@ interface Plan {
   id: number;
   name: string;
   price: number;
+  prices: { code: string; symbol: string; amount: number }[];
   specs: {
     ram_gb: number;
     ram_mb: number;
@@ -22,15 +23,34 @@ interface Plan {
   is_out_of_stock: boolean;
 }
 
+interface Currency {
+  code: string;
+  symbol: string;
+  rate_to_usd: number;
+}
+
 export default function Pricing() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currencies, setCurrencies] = useState<Currency[]>([]);
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   useEffect(() => {
+    // Detect regional currency
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz.includes("Kolkata") || tz.includes("Delhi") || tz.includes("Asia/Calcutta")) {
+      setSelectedCurrency("INR");
+    } else if (tz.includes("Europe")) {
+      setSelectedCurrency("EUR");
+    }
+
     fetch("/api/plans?t=" + Date.now())
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) setPlans(data.plans);
+        if (data.success) {
+          setPlans(data.plans);
+          setCurrencies(data.currencies || []);
+        }
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -43,7 +63,24 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">FORCEFUL <span className="text-primary">PRICING</span></h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">High-caliber hardware at prices that don't compromise your budget.</p>
+          <p className="text-gray-400 max-w-2xl mx-auto mb-8">High-caliber hardware at prices that don't compromise your budget.</p>
+          
+          {/* Currency Switcher */}
+          <div className="inline-flex p-1 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md">
+            {currencies.map((curr) => (
+              <button
+                key={curr.code}
+                onClick={() => setSelectedCurrency(curr.code)}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  selectedCurrency === curr.code 
+                  ? "bg-primary text-black shadow-lg" 
+                  : "text-gray-400 hover:text-white"
+                }`}
+              >
+                {curr.code}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -61,8 +98,15 @@ export default function Pricing() {
               
               <h3 className="text-xl font-bold mb-1 text-white group-hover:text-primary transition-colors">{plan.name}</h3>
               <div className="flex items-baseline gap-1 mb-8">
-                <span className="text-4xl font-black text-white">$ {plan.price.toFixed(2)}</span>
-                <span className="text-gray-500 text-sm font-medium uppercase tracking-widest">/ {plan.billing_period}</span>
+                {(() => {
+                  const priceObj = plan.prices?.find(p => p.code === selectedCurrency) || { symbol: "$", amount: plan.price };
+                  return (
+                    <>
+                      <span className="text-4xl font-black text-white">{priceObj.symbol} {priceObj.amount.toFixed(2)}</span>
+                      <span className="text-gray-500 text-sm font-medium uppercase tracking-widest">/ {plan.billing_period}</span>
+                    </>
+                  );
+                })()}
               </div>
 
               <div className="space-y-4 mb-10 flex-grow">
