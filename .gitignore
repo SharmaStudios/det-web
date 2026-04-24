@@ -1,0 +1,8 @@
+.agent/
+node_modules/
+.next/
+dist/
+build/
+.env*
+*.log
+.DS_Store
