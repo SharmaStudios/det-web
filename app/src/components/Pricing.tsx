@@ -19,6 +19,7 @@ interface Plan {
     backups: number;
   };
   billing_period: string;
+  out_of_stock: boolean;
 }
 
 export default function Pricing() {
@@ -53,9 +54,10 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
-              className={`glass-card p-8 rounded-2xl flex flex-col border border-white/5 hover:border-primary/50 transition-all duration-500 group relative overflow-hidden ${i === 1 ? 'ring-2 ring-secondary/50' : ''}`}
+              className={`glass-card p-8 rounded-2xl flex flex-col border border-white/5 hover:border-primary/50 transition-all duration-500 group relative overflow-hidden ${i === 1 ? 'ring-2 ring-secondary/50' : ''} ${plan.out_of_stock ? 'opacity-80' : ''}`}
             >
-              {i === 1 && <div className="absolute top-4 right-4 bg-secondary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-tighter animate-pulse">RECOMMENDED</div>}
+              {i === 1 && !plan.out_of_stock && <div className="absolute top-4 right-4 bg-secondary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-tighter animate-pulse">RECOMMENDED</div>}
+              {plan.out_of_stock && <div className="absolute top-4 right-4 bg-red-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-tighter shadow-[0_0_20px_rgba(220,38,38,0.4)]">OUT OF STOCK</div>}
               
               <h3 className="text-xl font-bold mb-1 text-white group-hover:text-primary transition-colors">{plan.name}</h3>
               <div className="flex items-baseline gap-1 mb-8">
@@ -70,7 +72,7 @@ export default function Pricing() {
                 <SpecItem icon={<RefreshCw className="w-4 h-4 text-primary" />} label="Backups" value={`${plan.features.backups}`} />
               </div>
 
-              <LinkBtn href={`https://dash.detriot.cloud/dashboard/checkout/${plan.id}`} primary={i === 1} />
+              <LinkBtn href={`https://dash.detriot.cloud/dashboard/checkout/${plan.id}`} primary={i === 1} disabled={plan.out_of_stock} />
             </motion.div>
           ))}
         </div>
@@ -91,7 +93,14 @@ function SpecItem({ icon, label, value }: { icon: any, label: string, value: str
   )
 }
 
-function LinkBtn({ href, primary }: { href: string, primary: boolean }) {
+function LinkBtn({ href, primary, disabled }: { href: string, primary: boolean, disabled?: boolean }) {
+  if (disabled) {
+    return (
+      <div className="w-full py-4 rounded-xl text-center font-bold uppercase tracking-widest bg-white/5 text-white/20 border border-white/5 cursor-not-allowed">
+        Sold Out
+      </div>
+    );
+  }
   return (
     <a 
       href={href} 
