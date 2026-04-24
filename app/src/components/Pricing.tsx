@@ -27,7 +27,7 @@ export default function Pricing() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/plans")
+    fetch("/api/plans?t=" + Date.now())
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setPlans(data.plans);
