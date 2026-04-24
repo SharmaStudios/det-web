@@ -65,10 +65,9 @@ export default function Pricing() {
 
               <div className="space-y-4 mb-10 flex-grow">
                 <SpecItem icon={<Cpu className="w-4 h-4 text-primary" />} label="Compute" value={plan.specs.cpu_cores ? `${plan.specs.cpu_cores} Cores` : `${plan.specs.cpu_percent}% CPU`} />
-                <SpecItem icon={<Database className="w-4 h-4 text-primary" />} label="Memory" value={plan.specs.ram_gb >= 1 ? `${plan.specs.ram_gb} GB DDR4` : `${plan.specs.ram_mb} MB DDR4`} />
-                <SpecItem icon={<HardDrive className="w-4 h-4 text-primary" />} label="Storage" value={plan.specs.disk_gb >= 1 ? `${plan.specs.disk_gb} GB NVMe` : `${plan.specs.disk_mb} MB NVMe`} />
-                <SpecItem icon={<ShieldCheck className="w-4 h-4 text-primary" />} label="Security" value="DDoS Guard" />
-                <SpecItem icon={<RefreshCw className="w-4 h-4 text-primary" />} label="Backups" value={`${plan.features.backups} Daily`} />
+                <SpecItem icon={<Database className="w-4 h-4 text-primary" />} label="Memory" value={plan.specs.ram_gb >= 1 ? `${plan.specs.ram_gb} GB` : `${plan.specs.ram_mb} MB`} />
+                <SpecItem icon={<HardDrive className="w-4 h-4 text-primary" />} label="Storage" value={plan.specs.disk_gb >= 1 ? `${plan.specs.disk_gb} GB` : `${plan.specs.disk_mb} MB`} />
+                <SpecItem icon={<RefreshCw className="w-4 h-4 text-primary" />} label="Backups" value={`${plan.features.backups}`} />
               </div>
 
               <LinkBtn href={`https://dash.detriot.cloud/dashboard/checkout/${plan.id}`} primary={i === 1} />

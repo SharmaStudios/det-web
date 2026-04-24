@@ -34,10 +34,9 @@ function renderPlans(plans) {
             <div class="price">$${plan.price.toFixed(2)}<span>/${plan.billing_period}</span></div>
             <ul class="specs-list">
                 <li><i data-lucide="cpu" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${cpu}</strong> Power</li>
-                <li><i data-lucide="database" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${ram}</strong> DDR4 RAM</li>
-                <li><i data-lucide="hard-drive" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${disk}</strong> NVMe SSD</li>
-                <li><i data-lucide="shield-check" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>Free</strong> DDoS Protection</li>
-                <li><i data-lucide="refresh-cw" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${plan.features.backups}</strong> Backup(s) Included</li>
+                <li><i data-lucide="database" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${ram}</strong> RAM</li>
+                <li><i data-lucide="hard-drive" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${disk}</strong> SSD Storage</li>
+                <li><i data-lucide="refresh-cw" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 10px; color: var(--primary);"></i> <strong>${plan.features.backups}</strong> Backup(s)</li>
             </ul>
             <a href="https://dash.detriot.cloud/dashboard/checkout/${plan.id}" class="btn ${index === 1 ? 'btn-primary' : 'btn-secondary'}">Order Now</a>
         `;
